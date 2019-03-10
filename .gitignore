@@ -1,0 +1,22 @@
+# Files/filetypes for git to not track/commit
+
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Documentation-related files
+docs/*
+
+# Log files
+*.log
+
+# JVM Error log files
+hs_err_pid*
