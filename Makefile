@@ -5,9 +5,13 @@
 JCOM = javac # Java compiler
 JFLAGS = -g -classpath $(BINDIR) -sourcepath $(SRCDIR) -d $(BINDIR) # Java compiler flags
 
+JDOC = javadoc # JavaDoc
+JDOCFLAGS = -classpath $(BINDIR) -d $(DOCDIR) # JavaDoc flags
+
 # Directories
 SRCDIR = source
 BINDIR = bin
+DOCDIR = docs
 
 # Sources
 SOURCES = BinarySearchTree.java AVLTree.java
@@ -23,5 +27,22 @@ vpath %.class $(BINDIR)
 $(BINDIR)/%.class: $(SRCDIR)/%.java
 	$(JCOM) $(JFLAGS) $<
 
-# Build all rule
+# Build all rule (default run)
 all: $(addprefix $(BINDIR)/,$(SOURCES:%.java=%.class))
+
+# Explicit rules
+# None (for now)
+
+# Other rules
+
+# Remove all compiled class files
+clean:
+	rm -f $(BINDIR)/*.class
+
+# Generate documentation using JavaDoc
+docs:
+	$(JDOC) $(JDOCFLAGS) $(SRCDIR)/*.java
+
+# Remove all doc files
+clean_docs:
+	rm -rf $(DOCDIR)/*
