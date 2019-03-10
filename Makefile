@@ -19,6 +19,9 @@ SOURCES = BinarySearchTree.java AVLTree.java
 # File extensions/suffixes
 .SUFFIXES: .java .class
 
+# Phony rules (rules without file dependencies)
+.PHONY: clean docs clean_docs
+
 # Dependency paths
 vpath %.java $(SRCDIR)
 vpath %.class $(BINDIR)
@@ -41,7 +44,7 @@ clean:
 
 # Generate documentation using JavaDoc
 docs:
-	$(JDOC) $(JDOCFLAGS) $(SRCDIR)/*.java
+	$(JDOC) $(JDOCFLAGS) $(addprefix $(SRCDIR)/,$(SOURCES))
 
 # Remove all doc files
 clean_docs:
