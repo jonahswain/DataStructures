@@ -19,9 +19,13 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>> {
     /** Head node of the tree */
     private BinarySearchTreeNode<dataType, keyType> headNode;
 
+    /** Size of the tree (number of elements) */
+    private long treeSize;
+
     /** Creates a new BinarySearchTree object */
     public BinarySearchTree(){
         this.headNode = null;
+        this.treeSize = 0;
     }
 
     /**
@@ -62,6 +66,15 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>> {
         // TODO
     }
 
+    /**
+     * Returns the depth of the tree
+     * 
+     * @return The depth of the tree
+     */
+    public int depth(){
+        return this.headNode.depth();
+    }
+
 }
 
 /**
@@ -98,6 +111,69 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
         this.rightChild = null;
         this.key = nodeKey;
         this.data = nodeData;
+    }
+
+    /**
+     * Gets the left child node of the node
+     * 
+     * @return Node's left child node
+     */
+    public BinarySearchTreeNode<dataType, keyType> getLeftChild(){
+        return this.leftChild;
+    }
+
+    /**
+     * Gets the right child node of the node
+     * 
+     * @return Node's right child node
+     */
+    public BinarySearchTreeNode<dataType, keyType> getRightChild(){
+        return this.rightChild;
+    }
+
+    /**
+     * Sets the left child node of the node
+     * 
+     * @param BinarySearchTreeNode  The new left child node
+     */
+    public void setLeftChild(BinarySearchTreeNode<dataType, keyType> node){
+        this.leftChild = node;
+    }
+
+    /**
+     * Sets the right child node of the node
+     * 
+     * @param BinarySearchTreeNode  The new right child node
+     */
+    public void setRightChild(BinarySearchTreeNode<dataType, keyType> node){
+        this.rightChild = node;
+    }
+
+    /**
+     * A recursive helper method for the BinarySearchTree's toArray method
+     * 
+     * @return An array representing the sub-tree with the current node as a head
+     */
+    public dataType[] toArrayHelper(){
+        // TODO
+    }
+
+    /**
+     * A recursive helper method for the BinarySearchTree's toString method
+     * 
+     * @return A string representing the sub-tree with the current node as a head
+     */
+    public String toStringHelper(){
+        // TODO
+    }
+
+    /**
+     * Gets the maximum depth of the sub-tree with the current node as a head
+     * 
+     * @return The depth of the sub-tree with the current node as a head
+     */
+    public int depth(){
+        // TODO
     }
 
 }
