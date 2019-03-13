@@ -90,7 +90,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
     /**
      * Removes the entry in the tree with the specified key<br>
      * 
-     * @param keyType  The key of the entry to remove
+     * @param key  The key of the entry to remove
      */
     public void delete(keyType key){
         // TODO
@@ -115,9 +115,10 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
     /**
      * Populates an array with sorted elements of the tree<br>
      * 
-     * @param BinarySearchTreeNode  The head node of the sub-tree
-     * @param dataType[]  The array to populate
-     * @param int  The current index in the array
+     * @param node  The head node of the sub-tree
+     * @param array  The array to populate
+     * @param arrayIndex  The current index in the array
+     * @return The new index in the array (after inserts)
      */
     public int populateArray(BinarySearchTreeNode<dataType, keyType> node, dataType[] array, int arrayIndex){
         // Populate the array with the left-most node first
@@ -149,7 +150,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
     /**
      * Returns the contents of the tree with head 'node' as a string with each data element on a new line<br>
      * 
-     * @param BinarySearchTreeNode  The head of the tree to represent as a string
+     * @param node  The head of the tree to represent as a string
      * @return The contents of the tree as a string
      */
     public String toString(BinarySearchTreeNode<dataType, keyType> node){
@@ -180,7 +181,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
     /**
      * Returns the depth of the tree with head 'node'<br>
      * 
-     * @param BinarySearchTreeNode  The head of the tree to get the depth of
+     * @param node  The head of the tree to get the depth of
      * @return The depth of the tree
      */
     public int depth(BinarySearchTreeNode<dataType, keyType> node){
@@ -230,8 +231,8 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /**
      * Creates a new BinarySearchTreeNode object with no parent<br>
      * 
-     * @param keyType  The node's key
-     * @param dataType  The node's data
+     * @param nodeKey  The node's key
+     * @param nodeData  The node's data
      */
     public BinarySearchTreeNode(keyType nodeKey, dataType nodeData){
         this.leftChild = null;
@@ -244,9 +245,9 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /**
      * Creates a new BinarySearchTreeNode object with a parent<br>
      * 
-     * @param keyType  The node's key
-     * @param dataType  The node's data
-     * @param BinarySearchTreeNode  The node's parent
+     * @param nodeKey  The node's key
+     * @param nodeData  The node's data
+     * @param nodeParent  The node's parent
      */
     public BinarySearchTreeNode(keyType nodeKey, dataType nodeData, BinarySearchTreeNode<dataType, keyType> nodeParent){
         this.leftChild = null;
@@ -304,7 +305,7 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /**
      * Sets the left child node of the node
      * 
-     * @param BinarySearchTreeNode  The new left child node
+     * @param node  The new left child node
      */
     public void setLeftChild(BinarySearchTreeNode<dataType, keyType> node){
         this.leftChild = node;
@@ -313,7 +314,7 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /**
      * Sets the right child node of the node
      * 
-     * @param BinarySearchTreeNode  The new right child node
+     * @param node  The new right child node
      */
     public void setRightChild(BinarySearchTreeNode<dataType, keyType> node){
         this.rightChild = node;
@@ -322,7 +323,7 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /**
      * Sets the parent node of the node
      * 
-     * @param BinarySearchTreeNode  The new parent node
+     * @param node  The new parent node
      */
     public void setParent(BinarySearchTreeNode<dataType, keyType> node){
         this.parent = node;
