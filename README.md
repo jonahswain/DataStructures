@@ -5,4 +5,4 @@ Java implementations of certain data structures
   
 ## Data Structures:
 - \[WIP\] Binary Search Tree
-- \[WIP\] AVL Tree
+- \[TODO\] AVL Tree
