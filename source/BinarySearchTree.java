@@ -45,14 +45,14 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
             while(true){
                 if (currentNode.key().compareTo(key) > 0){ // Insert to the left
                     if (currentNode.getLeftChild() == null){ // Insert a child on the current node
-                        currentNode.setLeftChild(new BinarySearchTreeNode<dataType, keyType>(key, data));
+                        currentNode.setLeftChild(new BinarySearchTreeNode<dataType, keyType>(key, data, currentNode));
                         break; // Exit loop
                     } else { // Branch to the next node
                         currentNode = currentNode.getLeftChild();
                     }
                 } else if (currentNode.key().compareTo(key) < 0){ // Insert to the right
                     if (currentNode.getRightChild() == null){ // Insert a child on the current node
-                        currentNode.setRightChild(new BinarySearchTreeNode<dataType, keyType>(key, data));
+                        currentNode.setRightChild(new BinarySearchTreeNode<dataType, keyType>(key, data, currentNode));
                         break; // Exit loop
                     } else { // Branch to the next node
                         currentNode = currentNode.getRightChild();
@@ -218,6 +218,9 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     /** Right child node */
     private BinarySearchTreeNode<dataType, keyType> rightChild;
 
+    /** Parent node */
+    private BinarySearchTreeNode<dataType, keyType> parent;
+
     /** Node key */
     private keyType key;
 
@@ -225,14 +228,30 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     private dataType data;
 
     /**
-     * Creates a new BinarySearchTreeNode object<br>
+     * Creates a new BinarySearchTreeNode object with no parent<br>
      * 
-     * @param nodeKey  The node's key
-     * @param nodeData  The node's data
+     * @param keyType  The node's key
+     * @param dataType  The node's data
      */
     public BinarySearchTreeNode(keyType nodeKey, dataType nodeData){
         this.leftChild = null;
         this.rightChild = null;
+        this.parent = null;
+        this.key = nodeKey;
+        this.data = nodeData;
+    }
+
+    /**
+     * Creates a new BinarySearchTreeNode object with a parent<br>
+     * 
+     * @param keyType  The node's key
+     * @param dataType  The node's data
+     * @param BinarySearchTreeNode  The node's parent
+     */
+    public BinarySearchTreeNode(keyType nodeKey, dataType nodeData, BinarySearchTreeNode<dataType, keyType> nodeParent){
+        this.leftChild = null;
+        this.rightChild = null;
+        this.parent = nodeParent;
         this.key = nodeKey;
         this.data = nodeData;
     }
@@ -274,6 +293,15 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
     }
 
     /**
+     * Gets the parent node of the node
+     * 
+     * @return Node's parent node
+     */
+    public BinarySearchTreeNode<dataType, keyType> getParent(){
+        return this.parent;
+    }
+
+    /**
      * Sets the left child node of the node
      * 
      * @param BinarySearchTreeNode  The new left child node
@@ -289,6 +317,15 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
      */
     public void setRightChild(BinarySearchTreeNode<dataType, keyType> node){
         this.rightChild = node;
+    }
+
+    /**
+     * Sets the parent node of the node
+     * 
+     * @param BinarySearchTreeNode  The new parent node
+     */
+    public void setParent(BinarySearchTreeNode<dataType, keyType> node){
+        this.parent = node;
     }
 
 }
