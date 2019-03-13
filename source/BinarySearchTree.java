@@ -5,6 +5,7 @@ Author: Jonah Swain
 */
 
 import java.lang.RuntimeException;
+import java.lang.reflect.Array;
 
 /**
  * <h2>BinarySearchTree</h2>
@@ -22,7 +23,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
     private BinarySearchTreeNode<dataType, keyType> headNode;
 
     /** Size of the tree (number of elements) */
-    private long treeSize;
+    private int treeSize;
 
     /** Creates a new BinarySearchTree object */
     public BinarySearchTree(){
@@ -100,8 +101,36 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
      * 
      * @return The contents of the tree as a sorted array (sorted by key)
      */
-    public dataType[] toArray(){
-        // TODO
+    public dataType[] toArray() {
+        if (headNode != null){ // Ensure the tree is not empty
+            @SuppressWarnings("unchecked") // Supress warnings about unchecked operations
+            dataType[] array = (dataType[]) Array.newInstance(this.headNode.data().getClass(), this.treeSize); // Create a new array to store the tree data
+            this.populateArray(this.headNode, array, 0); // Populate the array
+            return array;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Populates an array with sorted elements of the tree<br>
+     * 
+     * @param BinarySearchTreeNode  The head node of the sub-tree
+     * @param dataType[]  The array to populate
+     * @param int  The current index in the array
+     */
+    public int populateArray(BinarySearchTreeNode<dataType, keyType> node, dataType[] array, int arrayIndex){
+        // Populate the array with the left-most node first
+        if (node.getLeftChild() != null){ // If there is a left child node, recurse to it to populate the array
+            arrayIndex = populateArray(node.getLeftChild(), array, arrayIndex);
+        }
+        array[arrayIndex] = node.data(); // Place the data from the current node into the array
+        arrayIndex++; // Increment the array index
+        if (node.getRightChild() != null){ // If there is a right child node, recurse to it to populate the array
+            arrayIndex = populateArray(node.getRightChild(), array, arrayIndex);
+        }
+
+        return arrayIndex; // Return the new array index
     }
 
     /**
@@ -110,16 +139,64 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
      * @return The contents of the tree as a string, with each data element seperated by a newline
      */
     public String toString(){
-        // TODO
+        if (this.headNode != null){ // If the tree is non-empty, return its string
+            return this.toString(this.headNode);
+        } else {
+            return "";
+        }
     }
 
     /**
-     * Returns the depth of the tree
+     * Returns the contents of the tree with head 'node' as a string with each data element on a new line<br>
+     * 
+     * @param BinarySearchTreeNode  The head of the tree to represent as a string
+     * @return The contents of the tree as a string
+     */
+    public String toString(BinarySearchTreeNode<dataType, keyType> node){
+        String string = ""; // Create an empty string to append to
+        if (node.getLeftChild() != null){ // If the node has a left child, recurse to it and append its respective string
+            string += this.toString(node.getLeftChild());
+        }
+        string += node.data().toString() + "\n"; // Append this node's data string
+        if (node.getRightChild() != null){ // If the node has a right child, recurse to it and append its respective string
+            string += this.toString(node.getLeftChild());
+        }
+        return string; // Return the string
+    }
+
+    /**
+     * Returns the depth of the tree<br>
      * 
      * @return The depth of the tree
      */
     public int depth(){
-        return this.headNode.depth();
+        if (this.headNode != null){ // Verify the tree is not empty, and calculate/return the depth
+            return this.depth(this.headNode);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the depth of the tree with head 'node'<br>
+     * 
+     * @param BinarySearchTreeNode  The head of the tree to get the depth of
+     * @return The depth of the tree
+     */
+    public int depth(BinarySearchTreeNode<dataType, keyType> node){
+        int leftChildDepth = 0; // Depth of left sub-tree
+        int rightChildDepth = 0; // Depth of right sub-tree
+        if (node.getLeftChild() != null){ // If the node has a left child, calculate the depth
+            leftChildDepth = this.depth(node.getLeftChild());
+        }
+        if (node.getRightChild() != null){ // If the node has a right child, calculate the depth
+            rightChildDepth = this.depth(node.getRightChild());
+        }
+        if (leftChildDepth > rightChildDepth){ // Return the max depth of the children plus one
+            return leftChildDepth + 1;
+        } else {
+            return rightChildDepth + 1;
+        }
     }
 
 }
@@ -212,33 +289,6 @@ class BinarySearchTreeNode<dataType, keyType extends Comparable<keyType>> {
      */
     public void setRightChild(BinarySearchTreeNode<dataType, keyType> node){
         this.rightChild = node;
-    }
-
-    /**
-     * A recursive helper method for the BinarySearchTree's toArray method
-     * 
-     * @return An array representing the sub-tree with the current node as a head
-     */
-    public dataType[] toArrayHelper(){
-        // TODO
-    }
-
-    /**
-     * A recursive helper method for the BinarySearchTree's toString method
-     * 
-     * @return A string representing the sub-tree with the current node as a head
-     */
-    public String toStringHelper(){
-        // TODO
-    }
-
-    /**
-     * Gets the maximum depth of the sub-tree with the current node as a head
-     * 
-     * @return The depth of the sub-tree with the current node as a head
-     */
-    public int depth(){
-        // TODO
     }
 
 }
