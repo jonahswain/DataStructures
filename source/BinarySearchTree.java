@@ -93,7 +93,36 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
      * @param key  The key of the entry to remove
      */
     public void delete(keyType key){
-        // TODO
+        // Search for node with specified key
+        BinarySearchTreeNode<dataType, keyType> currentNode = this.headNode;
+        while (currentNode != null){
+            if (currentNode.key().compareTo(key) > 0){ // Search to the left
+                currentNode = currentNode.getLeftChild();
+            } else if (currentNode.key().compareTo(key) < 0){ // Search to the right
+                currentNode = currentNode.getRightChild();
+            } else { // Key is equal (delete node)
+                this.delete(currentNode);
+            }
+        }
+    }
+
+    /**
+     * Removes a node from the tree<br>
+     * 
+     * @param node  The node to remove
+     */
+    public void delete(BinarySearchTreeNode<dataType, keyType> node){
+        if (node.getLeftChild() == null && node.getRightChild() == null){ // Check if node is a leaf node
+            if (node.getParent().getLeftChild() == node){ // Node is parents' left child
+                node.getParent().setLeftChild(null); // Delete node
+            } else if (node.getParent().getRightChild() == node){ // Node is parents' right child
+                node.getParent().setRightChild(null); // Delete node
+            } else { // Node is not a child of parent (unknown error?)
+                throw new RuntimeException("Node is not a child of parent");
+            }
+        } else { // Node is not a leaf node
+            // TODO
+        }
     }
 
     /**
