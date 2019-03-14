@@ -126,12 +126,15 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
                 replacementNode = replacementNode.getRightChild();
             }
             if (replacementNode.getLeftChild() != null){ // Check if replacement node has a child
+                replacementNode.getLeftChild().setParent(replacementNode.getParent()); // Set the parent of the child to the parent of the replacement node
                 replacementNode.getParent().setRightChild(replacementNode.getLeftChild()); // Re-attach the replacement node's child to its parent
             }
             // Replace node to be deleted
             if (node.getParent().getLeftChild() == node){ // Node is parents' left child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setLeftChild(replacementNode); // Replace node
             } else if (node.getParent().getRightChild() == node){ // Node is parents' right child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setRightChild(replacementNode); // Replace node
             } else { // Node is not a child of parent (unknown error?)
                 throw new RuntimeException("Node is not a child of parent");
@@ -142,16 +145,88 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
                 replacementNode = replacementNode.getLeftChild();
             }
             if (replacementNode.getRightChild() != null){ // Check if replacement node has a child
+                replacementNode.getRightChild().setParent(replacementNode.getParent()); // Set the parent of the child to the parent of the replacement node
                 replacementNode.getParent().setLeftChild(replacementNode.getRightChild()); // Re-attach the replacement node's child to its parent
             }
             // Replace node to be deleted
             if (node.getParent().getLeftChild() == node){ // Node is parents' left child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setLeftChild(replacementNode); // Replace node
             } else if (node.getParent().getRightChild() == node){ // Node is parents' right child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setRightChild(replacementNode); // Replace node
             } else { // Node is not a child of parent (unknown error?)
                 throw new RuntimeException("Node is not a child of parent");
             }
+        }
+    }
+
+    /**
+     * Rotates a sub-tree left about node<br>
+     * 
+     * @param node  The node to rotate about
+     */
+    public void rotateLeft(AVLTreeNode<dataType, keyType> node) throws java.lang.RuntimeException{
+        if (node.getRightChild() != null){ // Check if node has a child to rotate into its place
+            AVLTreeNode<dataType, keyType> treeParent = node.getParent();
+            AVLTreeNode<dataType, keyType> newHead = node.getRightChild();
+            node.setRightChild(newHead.getLeftChild());
+            node.getRightChild().setParent(node);
+            newHead.setLeftChild(node);
+            node.setParent(newHead);
+
+            if (this.headNode == node){ // Special case for rotating the head node
+                // Set the new tree head node
+                this.headNode = newHead;
+                this.headNode.setParent(null);
+            } else { // Standard case
+                // Set the tree link with the new head
+                if (treeParent.getLeftChild() == node){ // Node is parents' left child
+                    treeParent.setLeftChild(newHead); // Replace node
+                } else if (treeParent.getRightChild() == node){ // Node is parents' right child
+                    treeParent.setRightChild(newHead); // Replace node
+                } else { // Node is not a child of parent (unknown error?)
+                    throw new RuntimeException("Node is not a child of parent");
+                }
+            }
+            
+        } else {
+            throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
+        }
+    }
+
+    /**
+     * Rotates a sub-tree right about node<br>
+     * 
+     * @param node  The node to rotate about
+     */
+    public void rotateRight(AVLTreeNode<dataType, keyType> node){
+        if (node.getLeftChild() != null){ // Check if node has a child to rotate into its place
+
+            AVLTreeNode<dataType, keyType> treeParent = node.getParent(); // Parent of the sub-tree to be rotated
+            AVLTreeNode<dataType, keyType> newHead = node.getLeftChild(); // New head node of the sub tree
+            node.setLeftChild(newHead.getRightChild()); // Replace the left child of the node with the right child of the new head
+            node.getLeftChild().setParent(node);
+            newHead.setRightChild(node); // Replace the old head with the new head
+            node.setParent(newHead);
+
+            if (this.headNode == node){ // Special case for rotating the head node
+                // Set the new tree head node
+                this.headNode = newHead;
+                this.headNode.setParent(null);
+            } else { // Standard case
+                // Set the tree link with the new head
+                if (treeParent.getLeftChild() == node){ // Node is parents' left child
+                    treeParent.setLeftChild(newHead); // Replace node
+                } else if (treeParent.getRightChild() == node){ // Node is parents' right child
+                    treeParent.setRightChild(newHead); // Replace node
+                } else { // Node is not a child of parent (unknown error?)
+                    throw new RuntimeException("Node is not a child of parent");
+                }
+            }
+
+        } else {
+            throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
         }
     }
 
