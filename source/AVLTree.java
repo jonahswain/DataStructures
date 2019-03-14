@@ -64,6 +64,7 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
         }
 
         this.treeSize++; // Increment tree size
+        this.autoBalance(); // Balance the tree
     }
 
     /**
@@ -102,6 +103,8 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
                 currentNode = currentNode.getRightChild();
             } else { // Key is equal (delete node)
                 this.delete(currentNode);
+                this.treeSize--; // Decrement tree size
+                this.autoBalance(); // Balance tree
             }
         }
     }
@@ -189,7 +192,7 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
                     throw new RuntimeException("Node is not a child of parent");
                 }
             }
-            
+
         } else {
             throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
         }
@@ -227,6 +230,44 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
 
         } else {
             throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
+        }
+    }
+
+    /**
+     * Automatically balances the AVL tree if it is unbalanced<br>
+     */
+    public void autoBalance(){
+        if (this.headNode != null){ // Ensure tree is not empty
+            this.autoBalance(this.headNode); // Balance from the head node
+        }
+    }
+
+    /**
+     * Automatically balances the sub tree with head 'node' if it is unbalanced<br>
+     * 
+     * @param node  The head node of the sub tree to balance
+     */
+    public void autoBalance(AVLTreeNode<dataType, keyType> node){
+        int leftChildDepth = 0; // Depth of the left sub-tree
+        if (node.getLeftChild() != null){ // If applicable, calculate the depth of the left sub tree
+            leftChildDepth = this.depth(node.getLeftChild());
+        }
+        int rightChildDepth = 0; // Depth of the right sub-tree
+        if (node.getRightChild() != null){ // If applicable, calculate the depth of the left sub tree
+            rightChildDepth = this.depth(node.getRightChild());
+        }
+
+        if (leftChildDepth > (rightChildDepth + 1)){ // Tree is unbalanced to the left
+            this.rotateRight(node); // Rotate right
+        } else if (rightChildDepth > (leftChildDepth + 1)){ // Tree is unbalanced to the right
+            this.rotateLeft(node); // Rotate left
+        }
+
+        if (node.getLeftChild() != null){ // If the node has a left child, balance it (recursively)
+            this.autoBalance(node.getLeftChild());
+        }
+        if (node.getRightChild() != null){ // If the node has a right child, balance it (recursively)
+            this.autoBalance(node.getRightChild());
         }
     }
 
