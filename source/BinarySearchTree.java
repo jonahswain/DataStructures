@@ -126,12 +126,15 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
                 replacementNode = replacementNode.getRightChild();
             }
             if (replacementNode.getLeftChild() != null){ // Check if replacement node has a child
+                replacementNode.getLeftChild().setParent(replacementNode.getParent()); // Set the parent of the child to the parent of the replacement node
                 replacementNode.getParent().setRightChild(replacementNode.getLeftChild()); // Re-attach the replacement node's child to its parent
             }
             // Replace node to be deleted
             if (node.getParent().getLeftChild() == node){ // Node is parents' left child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setLeftChild(replacementNode); // Replace node
             } else if (node.getParent().getRightChild() == node){ // Node is parents' right child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setRightChild(replacementNode); // Replace node
             } else { // Node is not a child of parent (unknown error?)
                 throw new RuntimeException("Node is not a child of parent");
@@ -142,12 +145,15 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
                 replacementNode = replacementNode.getLeftChild();
             }
             if (replacementNode.getRightChild() != null){ // Check if replacement node has a child
+                replacementNode.getRightChild().setParent(replacementNode.getParent()); // Set the parent of the child to the parent of the replacement node
                 replacementNode.getParent().setLeftChild(replacementNode.getRightChild()); // Re-attach the replacement node's child to its parent
             }
             // Replace node to be deleted
             if (node.getParent().getLeftChild() == node){ // Node is parents' left child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setLeftChild(replacementNode); // Replace node
             } else if (node.getParent().getRightChild() == node){ // Node is parents' right child
+                replacementNode.setParent(node.getParent()); // Set the replacement node's parent to the parent of the node to be deleted
                 node.getParent().setRightChild(replacementNode); // Replace node
             } else { // Node is not a child of parent (unknown error?)
                 throw new RuntimeException("Node is not a child of parent");
