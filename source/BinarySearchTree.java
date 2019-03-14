@@ -102,6 +102,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
                 currentNode = currentNode.getRightChild();
             } else { // Key is equal (delete node)
                 this.delete(currentNode);
+                this.treeSize--; // Decrement tree size
             }
         }
     }
