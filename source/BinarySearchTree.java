@@ -226,7 +226,7 @@ public class BinarySearchTree<dataType, keyType extends Comparable<keyType>>{
         }
         string += node.data().toString() + "\n"; // Append this node's data string
         if (node.getRightChild() != null){ // If the node has a right child, recurse to it and append its respective string
-            string += this.toString(node.getLeftChild());
+            string += this.toString(node.getRightChild());
         }
         return string; // Return the string
     }
