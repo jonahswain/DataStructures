@@ -165,69 +165,72 @@ public class AVLTree<dataType, keyType extends Comparable<keyType>>{
     }
 
     /**
-     * Rotates a sub-tree left about node<br>
+     * Rotates a sub-tree left about a node<br>
      * 
      * @param node  The node to rotate about
      */
-    public void rotateLeft(AVLTreeNode<dataType, keyType> node) throws java.lang.RuntimeException{
-        if (node.getRightChild() != null){ // Check if node has a child to rotate into its place
-            AVLTreeNode<dataType, keyType> treeParent = node.getParent();
-            AVLTreeNode<dataType, keyType> newHead = node.getRightChild();
-            node.setRightChild(newHead.getLeftChild());
-            node.getRightChild().setParent(node);
-            newHead.setLeftChild(node);
-            node.setParent(newHead);
+    public void rotateLeft(AVLTreeNode<dataType, keyType> node){
+        if (node.getRightChild() != null){ // Ensure node has a child to rotate into its place
+            AVLTreeNode<dataType, keyType> nodeReplacement = node.getRightChild(); // Replacement node
+            AVLTreeNode<dataType, keyType> treeParent = node.getParent(); // Parent of the sub-tree to be rotated
+            node.setRightChild(node.getRightChild().getLeftChild()); // Move the replacement node's right child into the place of the nodes left child
+            if (node.getRightChild() != null){ // If applicable, set the nodes new child's parent to node (fix parent)
+                node.getRightChild().setParent(node);
+            }
+            nodeReplacement.setLeftChild(node); // Set the node's replacement's right child to node
+            node.setParent(nodeReplacement); // Set the node's parent to the replacement node (fix parent)
+            nodeReplacement.setParent(treeParent); // Set the node replacement's parent to the original node's parent
 
             if (this.headNode == node){ // Special case for rotating the head node
                 // Set the new tree head node
-                this.headNode = newHead;
+                this.headNode = nodeReplacement;
                 this.headNode.setParent(null);
             } else { // Standard case
                 // Set the tree link with the new head
                 if (treeParent.getLeftChild() == node){ // Node is parents' left child
-                    treeParent.setLeftChild(newHead); // Replace node
+                    treeParent.setLeftChild(nodeReplacement); // Replace node
                 } else if (treeParent.getRightChild() == node){ // Node is parents' right child
-                    treeParent.setRightChild(newHead); // Replace node
+                    treeParent.setRightChild(nodeReplacement); // Replace node
                 } else { // Node is not a child of parent (unknown error?)
                     throw new RuntimeException("Node is not a child of parent");
                 }
             }
-
         } else {
             throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
         }
     }
 
     /**
-     * Rotates a sub-tree right about node<br>
+     * Rotates a sub-tree right about a node<br>
      * 
      * @param node  The node to rotate about
      */
     public void rotateRight(AVLTreeNode<dataType, keyType> node){
-        if (node.getLeftChild() != null){ // Check if node has a child to rotate into its place
-
+        if (node.getLeftChild() != null){ // Ensure node has a child to rotate into its place
+            AVLTreeNode<dataType, keyType> nodeReplacement = node.getLeftChild(); // Replacement node
             AVLTreeNode<dataType, keyType> treeParent = node.getParent(); // Parent of the sub-tree to be rotated
-            AVLTreeNode<dataType, keyType> newHead = node.getLeftChild(); // New head node of the sub tree
-            node.setLeftChild(newHead.getRightChild()); // Replace the left child of the node with the right child of the new head
-            node.getLeftChild().setParent(node);
-            newHead.setRightChild(node); // Replace the old head with the new head
-            node.setParent(newHead);
+            node.setLeftChild(node.getLeftChild().getRightChild()); // Move the replacement node's right child into the place of the nodes left child
+            if (node.getLeftChild() != null){ // If applicable, set the nodes new child's parent to node (fix parent)
+                node.getLeftChild().setParent(node);
+            }
+            nodeReplacement.setRightChild(node); // Set the node's replacement's right child to node
+            node.setParent(nodeReplacement); // Set the node's parent to the replacement node (fix parent)
+            nodeReplacement.setParent(treeParent); // Set the node replacement's parent to the original node's parent
 
             if (this.headNode == node){ // Special case for rotating the head node
                 // Set the new tree head node
-                this.headNode = newHead;
+                this.headNode = nodeReplacement;
                 this.headNode.setParent(null);
             } else { // Standard case
                 // Set the tree link with the new head
                 if (treeParent.getLeftChild() == node){ // Node is parents' left child
-                    treeParent.setLeftChild(newHead); // Replace node
+                    treeParent.setLeftChild(nodeReplacement); // Replace node
                 } else if (treeParent.getRightChild() == node){ // Node is parents' right child
-                    treeParent.setRightChild(newHead); // Replace node
+                    treeParent.setRightChild(nodeReplacement); // Replace node
                 } else { // Node is not a child of parent (unknown error?)
                     throw new RuntimeException("Node is not a child of parent");
                 }
             }
-
         } else {
             throw new RuntimeException("Node has no child to rotate into its place"); // Throw an error
         }
