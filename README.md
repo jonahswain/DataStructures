@@ -6,3 +6,4 @@ Java implementations of certain data structures
 ## Data Structures:
 - Binary Search Tree
 - AVL Tree
+- [WIP] Hash Table
