@@ -14,7 +14,7 @@ BINDIR = bin
 DOCDIR = docs
 
 # Sources
-SOURCES = BinarySearchTree.java AVLTree.java
+SOURCES = BinarySearchTree.java AVLTree.java HashTable.java
 
 # File extensions/suffixes
 .SUFFIXES: .java .class
