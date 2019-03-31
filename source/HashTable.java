@@ -86,25 +86,169 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
         this.tableSize = 0; // Set table size to zero
     }
     
-
+    /** Inserts a new entry into the hash table<br>
+     * 
+     * @param key  The key of the entry to insert
+     * @param data  The data to insert
+     */
     public void insert(keyType key, dataType data){
-        // TODO
+        if ((this.tableSize >= this.maxTableSize) && (this.collisionResolutionMode != chaining)){ // Verify that there is space to insert into the table
+            throw new RuntimeException("Hash Table is full"); // Throw an error if the table is full
+        }
+        int tableIndex = key.hashCode() % this.maxTableSize; // Compute the table index (hash mod table max size)
+        if (this.table[tableIndex] == null){ // Check for collisions
+            this.table[tableIndex] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
+            this.tableSize++; // Increment the table size (number of elements)
+        } else { // Resolve collision
+            if (this.collisionResolutionMode == linearProbing){ // Resolve by linear probing
+                int offset = 1;
+                while (offset < this.maxTableSize){
+                    if (this.table[(tableIndex + offset) % this.maxTableSize] == null){
+                        this.table[(tableIndex + offset) % this.maxTableSize] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
+                        this.tableSize++; // Increment the table size (number of elements)
+                        break;
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == quadraticProbing){ // Resolve by quadratic probing
+                int offset = 1;
+                while (offset < this.maxTableSize){
+                    if (this.table[(tableIndex + offset*offset) % this.maxTableSize] == null){
+                        this.table[(tableIndex + offset*offset) % this.maxTableSize] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
+                        this.tableSize++; // Increment the table size (number of elements)
+                        break;
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == chaining){ // Resolve by chaining
+                HashTableNode<dataType, keyType> currentChainNode = this.table[tableIndex];
+                while(currentChainNode.getChainedNode() != null){ // Traverse the chain until a null reference is found to insert at
+                    currentChainNode = currentChainNode.getChainedNode();
+                }
+                currentChainNode.setChainedNode(new HashTableNode<dataType, keyType>(key, data)); // Insert a node in the chain
+                this.tableSize++; // Increment the table size (number of elements)
+            }
+        }
     }
 
+    /** Gets the data located at the specified key in the table<br>
+     * 
+     * @param key  The key of the entry to find
+     * @return Data at the specified key (null if key not found)
+     */
     public dataType get(keyType key){
-        // TODO
+        int tableIndex = key.hashCode() % maxTableSize; // Compute table index (key hash mod max table size)
+        if (this.table[tableIndex] == null){ // Check if an element exists at the table index
+            return null; // Return null if no element found
+        } else if (this.table[tableIndex].key().equals(key)){ // Check if the found element key matches the key to get
+            return this.table[tableIndex].data(); // Return the data if the key matches
+        } else { // Traverse table using collision resolution method to find the correct key
+            if (this.collisionResolutionMode == linearProbing){ // Linear probing
+                int offset = 1;
+                while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
+                    if (this.table[(tableIndex + offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
+                        return this.table[(tableIndex + offset) % this.maxTableSize].data(); // Return the data if key matches
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == quadraticProbing){ // Quadratic probing (use offset squared)
+                int offset = 1;
+                while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset*offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
+                    if (this.table[(tableIndex + offset*offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
+                        return this.table[(tableIndex + offset*offset) % this.maxTableSize].data(); // Return the data if key matches
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == chaining){ // Chaining
+                HashTableNode<dataType, keyType> currentChainNode = this.table[tableIndex];
+                while (currentChainNode.getChainedNode() != null){ // Traverse the chain until either the required key is found or the chain ends
+                    if (currentChainNode.getChainedNode().key().equals(key)){ // Check the key of the next node in the chain
+                        return currentChainNode.getChainedNode().data(); // Return the data if the key matches
+                    }
+                    currentChainNode = currentChainNode.getChainedNode();
+                }
+            }
+        }
+        return null; // If key not found, return null
     }
 
+    /** Removes the entry in the tree with the specified key<br>
+     * 
+     * @param key  The key of the entry to remove
+     */
     public void delete(keyType key){
-        // TODO
+        int tableIndex = key.hashCode() % maxTableSize; // Compute table index (key hash mod max table size)
+        if (this.table[tableIndex] == null){ // Check if an element exists at the table index
+            return; // Return if key does not exist in table
+        } else if (this.table[tableIndex].key().equals(key)){ // Check if the found element key matches the key to get
+            this.table[tableIndex] = null; // Delete the element if the key matches
+        } else { // Traverse table using collision resolution method to find the correct key
+            if (this.collisionResolutionMode == linearProbing){ // Linear probing
+                int offset = 1;
+                while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
+                    if (this.table[(tableIndex + offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
+                        this.table[(tableIndex + offset) % this.maxTableSize] = null; // Delete the element if the key matches
+                        break;
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == quadraticProbing){ // Quadratic probing (use offset squared)
+                int offset = 1;
+                while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset*offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
+                    if (this.table[(tableIndex + offset*offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
+                        this.table[(tableIndex + offset*offset) % this.maxTableSize] = null; // Delete the element if the key matches
+                        break;
+                    }
+                    offset++; // Increment offset
+                }
+            } else if (this.collisionResolutionMode == chaining){ // Chaining
+                HashTableNode<dataType, keyType> currentChainNode = this.table[tableIndex];
+                while (currentChainNode.getChainedNode() != null){ // Traverse the chain until either the required key is found or the chain ends
+                    if (currentChainNode.getChainedNode().key().equals(key)){ // Check the key of the next node in the chain
+                        currentChainNode.setChainedNode(currentChainNode.getChainedNode().getChainedNode()); // Set the chained node of the current node to the chained node of the chained node of the current node, effectively removing the chained node from the chain, deleting the required element
+                    }
+                    currentChainNode = currentChainNode.getChainedNode();
+                }
+            }
+        }
     }
 
+    /** Gets the load factor of the table<br>
+     * 
+     * @return Load factor of the table
+     */
     public float loadFactor(){
         return this.tableSize/this.maxTableSize;
     }
 
-    public String toString(){
+    /** Expands the table and re-inserts all the data elements<br>
+     * The new table size must be prime, or the next prime number will be used instead<br>
+     * 
+     * @param newSize  The new table size
+     */
+    public void expandTable(int newSize){
         // TODO
+    }
+
+    /** Returns the contents of the table as a string, with each data element on a new line (the data elements must have toString methods)<br>
+     * 
+     * @return The contents of the table as a string, with each data element seperated by a newline
+     */
+    public String toString(){
+        String str = "";
+        for (int i = 0; i < this.maxTableSize; i++){ // Iterate through every element in the table
+            if (this.table[i] != null){ // If the element is not null, add it to the string
+                str = str + this.table[i].data().toString() + "\n";
+                if (this.collisionResolutionMode == chaining){ // If chaining collision resolution is used, add any nodes in the chain to the string
+                    HashTableNode<dataType, keyType> currentChainNode = this.table[i];
+                    while (currentChainNode.getChainedNode() != null){
+                        str = str + currentChainNode.getChainedNode().data().toString() + "\n";
+                        currentChainNode = currentChainNode.getChainedNode();
+                    }
+                }
+            }
+        }
+        return str;
     }
 }
 
