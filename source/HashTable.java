@@ -236,11 +236,11 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
             this.maxTableSize = newSize;
             this.table = (HashTableNode<dataType, keyType>[]) Array.newInstance(new HashTableNode<dataType, keyType>(null, null).getClass(), this.maxTableSize); // Create new table array
 
-            for (int i = 0; i < this.maxTableSize; i++){ // Iterate through every element in the old table
-                if (this.table[i] != null){ // If the element is not null, add it to the new table
-                    this.insert(table[i].key(), table[i].data());
+            for (int i = 0; i < oldTableSize; i++){ // Iterate through every element in the old table
+                if (oldTable[i] != null){ // If the element is not null, add it to the new table
+                    this.insert(oldTable[i].key(), oldTable[i].data());
                     if (this.collisionResolutionMode == chaining){ // If chaining collision resolution is used, add any nodes in the chain to the new table
-                        HashTableNode<dataType, keyType> currentChainNode = this.table[i];
+                        HashTableNode<dataType, keyType> currentChainNode = oldTable[i];
                         while (currentChainNode.getChainedNode() != null){
                             this.insert(currentChainNode.getChainedNode().key(), currentChainNode.getChainedNode().data());
                             currentChainNode = currentChainNode.getChainedNode();
