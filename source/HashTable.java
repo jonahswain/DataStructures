@@ -182,12 +182,14 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
             return; // Return if key does not exist in table
         } else if (this.table[tableIndex].key().equals(key)){ // Check if the found element key matches the key to get
             this.table[tableIndex] = null; // Delete the element if the key matches
+            this.tableSize--; // Decrement table size (number of items stored)
         } else { // Traverse table using collision resolution method to find the correct key
             if (this.collisionResolutionMode == linearProbing){ // Linear probing
                 int offset = 1;
                 while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
                     if (this.table[(tableIndex + offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
                         this.table[(tableIndex + offset) % this.maxTableSize] = null; // Delete the element if the key matches
+                        this.tableSize--; // Decrement table size (number of items stored)
                         break;
                     }
                     offset++; // Increment offset
@@ -197,6 +199,7 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
                 while ((offset < this.maxTableSize) && (this.table[(tableIndex + offset*offset) % this.maxTableSize] != null)){ // Traverse through the table until there are no more relevant elements to check
                     if (this.table[(tableIndex + offset*offset) % this.maxTableSize].key().equals(key)){ // Check if the key of the current element matches the requested key
                         this.table[(tableIndex + offset*offset) % this.maxTableSize] = null; // Delete the element if the key matches
+                        this.tableSize--; // Decrement table size (number of items stored)
                         break;
                     }
                     offset++; // Increment offset
@@ -206,6 +209,8 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
                 while (currentChainNode.getChainedNode() != null){ // Traverse the chain until either the required key is found or the chain ends
                     if (currentChainNode.getChainedNode().key().equals(key)){ // Check the key of the next node in the chain
                         currentChainNode.setChainedNode(currentChainNode.getChainedNode().getChainedNode()); // Set the chained node of the current node to the chained node of the chained node of the current node, effectively removing the chained node from the chain, deleting the required element
+                        this.tableSize--; // Decrement table size (number of items stored)
+                        break;
                     }
                     currentChainNode = currentChainNode.getChainedNode();
                 }
