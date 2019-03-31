@@ -221,13 +221,37 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
         return this.tableSize/this.maxTableSize;
     }
 
+    @SuppressWarnings("unchecked") // Supress warnings about unchecked operations
     /** Expands the table and re-inserts all the data elements<br>
      * The new table size must be prime, or the next prime number will be used instead<br>
      * 
      * @param newSize  The new table size
      */
     public void expandTable(int newSize){
-        // TODO
+        if (newSize > this.maxTableSize){
+            newSize = nextPrime(newSize); // Ensure the new size is a prime number
+            HashTableNode<dataType, keyType>[] oldTable = this.table;
+            int oldTableSize = this.maxTableSize;
+
+            this.maxTableSize = newSize;
+            this.table = (HashTableNode<dataType, keyType>[]) Array.newInstance(new HashTableNode<dataType, keyType>(null, null).getClass(), this.maxTableSize); // Create new table array
+
+            for (int i = 0; i < this.maxTableSize; i++){ // Iterate through every element in the old table
+                if (this.table[i] != null){ // If the element is not null, add it to the new table
+                    this.insert(table[i].key(), table[i].data());
+                    if (this.collisionResolutionMode == chaining){ // If chaining collision resolution is used, add any nodes in the chain to the new table
+                        HashTableNode<dataType, keyType> currentChainNode = this.table[i];
+                        while (currentChainNode.getChainedNode() != null){
+                            this.insert(currentChainNode.getChainedNode().key(), currentChainNode.getChainedNode().data());
+                            currentChainNode = currentChainNode.getChainedNode();
+                        }
+                    }
+                }
+            }
+
+        } else {
+            throw new RuntimeException("New table size must be larger than current table size");
+        }
     }
 
     /** Returns the contents of the table as a string, with each data element on a new line (the data elements must have toString methods)<br>
