@@ -13,7 +13,7 @@ import java.lang.Math;
  * A has table data structure<br>
  * generic dataType is the (object) type of the data to be stored<br>
  * generic keyType is the (object) type of the key used<br><br>
- * Uses the builtin hashCode function of the kayType object (all Java Objects have a hashCode function, it is recommended to override it with a good implementation on custom key objects)<br>
+ * Uses the builtin hashCode function of the keyType object (all Java Objects have a hashCode function, it is recommended to override it with a good implementation on custom key objects)<br>
  * The table size is prime (if a non-prime table size is provided, it will be increased until it is prime)<br>
  * 
  * @author Jonah Swain (https://github.com/jonahswain/)
@@ -108,6 +108,10 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
                         this.table[(tableIndex + offset) % this.maxTableSize] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
                         this.tableSize++; // Increment the table size (number of elements)
                         break;
+                    } else {
+                        if (this.table[(tableIndex + offset) % this.maxTableSize].key().equals(key)){
+                            throw new RuntimeException("Duplicate keys are not permitted");
+                        }
                     }
                     offset++; // Increment offset
                 }
@@ -118,12 +122,19 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
                         this.table[(tableIndex + offset*offset) % this.maxTableSize] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
                         this.tableSize++; // Increment the table size (number of elements)
                         break;
+                    } else {
+                        if (this.table[(tableIndex + offset*offset) % this.maxTableSize].key().equals(key)){
+                            throw new RuntimeException("Duplicate keys are not permitted");
+                        }
                     }
                     offset++; // Increment offset
                 }
             } else if (this.collisionResolutionMode == chaining){ // Resolve by chaining
                 HashTableNode<dataType, keyType> currentChainNode = this.table[tableIndex];
                 while(currentChainNode.getChainedNode() != null){ // Traverse the chain until a null reference is found to insert at
+                    if (currentChainNode.key().equals(key)){
+                        throw new RuntimeException("Duplicate keys are not permitted");
+                    }
                     currentChainNode = currentChainNode.getChainedNode();
                 }
                 currentChainNode.setChainedNode(new HashTableNode<dataType, keyType>(key, data)); // Insert a node in the chain
