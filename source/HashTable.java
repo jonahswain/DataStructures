@@ -6,6 +6,7 @@ Author: Jonah Swain
 
 import java.lang.RuntimeException;
 import java.lang.reflect.Array;
+import java.lang.Math;
 
 /**
  * <h2>HashTable</h2>
@@ -95,7 +96,7 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
         if ((this.tableSize >= this.maxTableSize) && (this.collisionResolutionMode != chaining)){ // Verify that there is space to insert into the table
             throw new RuntimeException("Hash Table is full"); // Throw an error if the table is full
         }
-        int tableIndex = key.hashCode() % this.maxTableSize; // Compute the table index (hash mod table max size)
+        int tableIndex = Math.abs(key.hashCode()) % this.maxTableSize; // Compute the table index (hash mod table max size)
         if (this.table[tableIndex] == null){ // Check for collisions
             this.table[tableIndex] = new HashTableNode<dataType, keyType>(key, data); // If no collision, insert at relevant index
             this.tableSize++; // Increment the table size (number of elements)
@@ -137,7 +138,7 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
      * @return Data at the specified key (null if key not found)
      */
     public dataType get(keyType key){
-        int tableIndex = key.hashCode() % maxTableSize; // Compute table index (key hash mod max table size)
+        int tableIndex = Math.abs(key.hashCode()) % maxTableSize; // Compute table index (key hash mod max table size)
         if (this.table[tableIndex] == null){ // Check if an element exists at the table index
             return null; // Return null if no element found
         } else if (this.table[tableIndex].key().equals(key)){ // Check if the found element key matches the key to get
@@ -177,7 +178,7 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
      * @param key  The key of the entry to remove
      */
     public void delete(keyType key){
-        int tableIndex = key.hashCode() % maxTableSize; // Compute table index (key hash mod max table size)
+        int tableIndex = Math.abs(key.hashCode()) % maxTableSize; // Compute table index (key hash mod max table size)
         if (this.table[tableIndex] == null){ // Check if an element exists at the table index
             return; // Return if key does not exist in table
         } else if (this.table[tableIndex].key().equals(key)){ // Check if the found element key matches the key to get
