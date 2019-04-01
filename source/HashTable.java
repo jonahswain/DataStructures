@@ -235,7 +235,7 @@ public class HashTable<dataType, keyType extends Comparable<keyType>>{
      * @return Load factor of the table
      */
     public float loadFactor(){
-        return this.tableSize/this.maxTableSize;
+        return (float)this.tableSize/this.maxTableSize;
     }
 
     @SuppressWarnings("unchecked") // Supress warnings about unchecked operations
